@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="container mt-4">
+    <div class="row">
+
+        <div class="col-md-8">
+            <h1 class="display-4 font-weight-bold mb-2">
+                {{ post.title }}
+            </h1>
+
+            <p class="text-muted">
+                Posted on {{ post.created_at|date:"F d, Y" }}
+                by {{ post.author }}
+            </p>
+
+            <a href="{% url 'posts_by_category' post.category.id %}"
+               class="badge badge-primary p-2 mb-3">
+                {{ post.category }}
+            </a>
+
+            <div class="my-4">
+                <img src="{{ post.featured_image.url }}"
+                     class="img-fluid rounded w-100"
+                     style="max-height:450px; object-fit:cover;">
+            </div>
+
+            <div class="blog-content"
+                 style="font-size:18px; line-height:1.9;">
+
+                {{ post.blog_body|safe }}
+
+            </div>
+
+        </div>
+
+        <aside class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Search
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Enter search term...">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary"
+                                        type="submit">
+                                    Go!
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+     <!-- Categories -->
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="font-italic">
+                        Categories
+                    </h3>
+                    <div class="row">
+                        {% for category in categories %}
+                        <div class="col-6">
+                            <ul class="list-unstyled mb-0">
+                                <li>
+                                    <a href="{% url 'posts_by_category' category.id %}">
+                                        {{ category.category_name }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Follow Us -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="font-italic">
+                        Follow Us
+                    </h3>
+                    <ol class="list-unstyled mb-0">
+                        <li>
+                            <a href="#">GitHub</a>
+                        </li>
+                        <li>
+                            <a href="#">LinkedIn</a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </aside>
+    </div>
+</main>
+
+{% endblock %}
