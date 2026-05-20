@@ -36,26 +36,7 @@
         </div>
 
         <aside class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header">
-                    Search
-                </div>
-                <div class="card-body">
-                    <form>
-                        <div class="input-group">
-                            <input type="text"
-                                   class="form-control"
-                                   placeholder="Enter search term...">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary"
-                                        type="submit">
-                                    Go!
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            
      <!-- Categories -->
 
             <div class="card mb-4">
@@ -80,21 +61,16 @@
             </div>
 
             <!-- Follow Us -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="font-italic">
-                        Follow Us
-                    </h3>
-                    <ol class="list-unstyled mb-0">
-                        <li>
-                            <a href="#">GitHub</a>
-                        </li>
-                        <li>
-                            <a href="#">LinkedIn</a>
-                        </li>
-                    </ol>
-                </div>
+            {% if social_links %}
+            <div class="p-3">
+            <h4 class="font-italic">Follow Us</h4>
+            <ol class="list-unstyled">
+                {% for i in social_links %}
+                <li><a href="{{ i.link }}" target="_blank">{{ i.platform }} </a></li>
+                {% endfor %}
+            </ol>
             </div>
+        {% endif %}
         </aside>
     </div>
 </main>
