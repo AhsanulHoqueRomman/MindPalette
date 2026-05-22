@@ -2,7 +2,29 @@
 
 {% block content %}
 
-{{ blogs }}
+ <h3 class="text-lowercase" style="letter-spacing: 3px; color: green;">Search results for- '{{ keyword }}'</h3>
+  <div class="row mb-2">
+    {% if blogs %}
+    {% for post in blogs %}
+      <div class="col-md-6">
+        <div class="card border-0" >
+          <div class="card-body">
+            <h3><a href="{% url "blogs" post.slug %}" class="text-dark">{{ post.title }}</a></h3>
+            <small class="mb-1 text-muted">{{ post.created_at | timesince }} ago | {{ post.author }}</small>
+            <p class="card-text">{{ post.short_description | truncatewords:30 }}</p>
+            <div class="my-4">
+                <img src="{{ post.featured_image.url }}"
+                     class="img-fluid rounded w-100"
+                     style="max-height:450px; object-fit:cover;">
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    {% else %}
+    <p>No Posts Found in this category</p>
+    {% endif %}
+  </div>
 
 
 {% endblock %}
