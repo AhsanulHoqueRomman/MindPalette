@@ -3,6 +3,10 @@ from django.http import HttpResponse
 from blogs.models import Category, Blog
 from about.models import About
 from .forms import RegistrationForm
+from django.contrib import auth
+from django.contrib.auth.forms import AuthenticationForm
+
+
 
 
 def home(request):
@@ -34,3 +38,11 @@ def register(request):
         'form' : form,
     }
     return render(request, 'register.html', context)
+
+def login(request):
+    form= AuthenticationForm()
+    context = {
+        'form': form,
+    }
+
+    return render(request,'login.html', context)

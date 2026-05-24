@@ -40,7 +40,9 @@
 
             <div class="row flex-nowrap justify-content-between align-items-center">
 
-                <div class="col-8">
+                <!-- Logo -->
+
+                <div class="col-lg-3 col-md-3 col-12 mb-3 mb-md-0">
 
                     <a class="blog-header-logo text-dark text-decoration-none fs-2 fw-bold"
                        href="/">
@@ -51,17 +53,49 @@
 
                 </div>
 
-                <div class="col-4 d-flex justify-content-end align-items-center">
 
-                    <a class="btn btn-success btn-sm me-2"
-                       href="#">
+                <!-- Search Box -->
+
+                <div class="col-lg-4 col-md-5 col-12 mb-3 mb-md-0">
+
+                    <form action="{% url 'search' %}"
+                          method="GET">
+
+                        <div class="input-group">
+
+                            <input type="text"
+                                   name="keyword"
+                                   class="form-control"
+                                   placeholder="Search articles..."
+                                   required>
+
+                            <button class="btn btn-dark"
+                                    type="submit">
+
+                                Search
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <!-- Auth Buttons -->
+
+                <div class="col-lg-4 col-md-4 col-12 d-flex justify-content-md-end justify-content-start">
+
+                    <a class="btn btn-success me-2"
+                       href="{% url 'login' %}">
 
                         Login
 
                     </a>
 
-                    <a class="btn btn-outline-secondary btn-sm"
-                       href="#">
+                    <a class="btn btn-outline-secondary"
+                       href="{% url 'register' %}">
 
                         Register
 
