@@ -102,7 +102,7 @@
                     </a>
 
                     {% else %}
-                    <span>You are logged in as {{ user }}</span>
+                    <span><a class="btn btn-success" href="{% url "dashboard" %}">Dashboard</a></span>
                     &emsp;
                     <span><a class="btn btn-danger" href="{% url "logout" %}">Logout</a></span>
 
