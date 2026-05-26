@@ -72,11 +72,10 @@ def add_post(request):
     if request.method =='POST':
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save(commit=False) # temporarily saving the form
+            post = form.save(commit=False)          #Temporarily saving the form.Return unsaved model object.commit=False means:"Create the object first, let me modify it, then I'll save it manually."
             post.author = request.user
-            post.save()
-            title = form.cleaned_data['title']
-            post.slug = slugify(title) + '-'+str(post.id)
+            post.save()                             #saving it to generate id from database and then use the id in slug to generate unique slug cz slug must be unique.Blog title can be same in many blogs.And slug generates from blog title.
+            post.slug = slugify(post.title) + '-' + str(post.id)            #id comes from the database so we have to save form data in database first. But we can use post.title before saving cause it comes from the form data and doesn't generate from database.
             post.save()
             return redirect('posts')
         else:
