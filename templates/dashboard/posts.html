@@ -35,7 +35,7 @@
                 <td>{{ post.category}}</td>
                 <td>{{ post.author}}</td>
                 <td>{{ post.status}}</td>
-                <td>{{ post.is_featured}}</td>
+                <td>{% if post.is_featured %} <i class="fa fa-check text-success"></i> {% else %} <i class="fa fa-times text-danger"></i>{% endif %}</td>
                 <td>{{ post.created_at }}</td>
                 <td>{{ post.updated_at }}</td>
                 <td>
