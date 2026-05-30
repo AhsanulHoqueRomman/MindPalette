@@ -17,7 +17,7 @@
         <form action="{% url 'add_user' %}" method="POST">
             {% csrf_token %}
             {{ form | crispy }}
-            <button type="submit" class="btn btn-warning">Submit</button>
+            <button type="submit" class="btn btn-success">Submit</button>
         </form>
         <br>
         {% else %}
