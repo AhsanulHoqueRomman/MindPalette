@@ -11,6 +11,7 @@
 
     <!-- Right side content -->
     <div class="col-md-9">
+        {% if perms.auth.add_user %}
         <h2 class="text-center">Add New User</h2>
         
         <form action="{% url 'add_user' %}" method="POST">
@@ -19,6 +20,9 @@
             <button type="submit" class="btn btn-warning">Submit</button>
         </form>
         <br>
+        {% else %}
+        <h4>You do not have permission to access Users.</h4>
+        {% endif %}
     </div>
 </div>
 

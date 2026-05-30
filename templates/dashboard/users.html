@@ -11,6 +11,7 @@
     <!-- Right side content -->
 
      <div class="col-md-9">
+      {% if perms.auth.view_user %}
         <h2>All Users</h2>
         <a href="{% url "add_user" %}" class="btn btn-dark text-light float-end mb-2">Add New</a>
         <table class="table table-hover">
@@ -47,6 +48,9 @@
               
             </tbody>
           </table>
+      {% else %}
+          <h4>You do not have permission to view this Page.</h4>
+      {% endif %}
     </div>
 
 
