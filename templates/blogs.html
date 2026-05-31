@@ -48,8 +48,22 @@
                             </div>
                         {% endfor %}
                     {% else %}
-                    No comments yet.
+                    <p class= 'mb-1'>No comments yet.</p>
                     {% endif %}
+                    <br>
+                    <div class="form-group">
+                        {% if user.is_authenticated %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <textarea name="comment" class="form-control" placeholder="Write your comment Here"></textarea>
+                                <input type="submit" value="Submit" class="btn btn-primary mt-2">
+                            </div>
+                        </form>
+                        {% else %}
+                        <p>Please <span><a href="{% url 'login' %}">login</a></span> to write a comment!</p>
+                        {% endif %}
+                    </div>
         </div>
 
         <aside class="col-md-4">
