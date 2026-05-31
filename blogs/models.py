@@ -16,7 +16,7 @@ class Category(models.Model):
     
 
 STATUS_CHOICE = (
-    ('Daraft', 'Draft'),
+    ('Draft', 'Draft'),
     ('Published', 'Published')
 )
 

@@ -5,6 +5,7 @@ from about.models import About
 from .forms import RegistrationForm
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.paginator import Paginator
 
 
 
@@ -12,7 +13,10 @@ from django.contrib.auth.forms import AuthenticationForm
 def home(request):
     categories = Category.objects.all()
     featured_posts = Blog.objects.filter(is_featured = True, status = 'Published').order_by('-updated_at')
-    posts = Blog.objects.filter(is_featured = False, status = 'Published')
+    posts = Blog.objects.filter(is_featured = False, status = 'Published').order_by('-created_at')
+    paginator = Paginator(posts, 5)
+    page = request.GET.get('page')
+    posts = paginator.get_page(page)
     try:
         about = About.objects.get()
     except:
