@@ -7,6 +7,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.paginator import Paginator
+from django.utils.http import url_has_allowed_host_and_scheme
 
 
 
@@ -77,6 +78,10 @@ def edit_profile(request):
 
 
 def login(request):
+    next_url = request.POST.get('next') or request.GET.get('next')
+    if next_url and not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+        next_url = None
+
     if request.method =='POST':
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -86,11 +91,12 @@ def login(request):
             user = auth.authenticate(username=username, password=password)
             if user is not None:
                 auth.login(request, user)
-            return redirect('dashboard')
+                return redirect(next_url or 'dashboard')
     else:
         form= AuthenticationForm()
     context = {
         'form': form,
+        'next': next_url,
     }
 
     return render(request,'login.html', context)

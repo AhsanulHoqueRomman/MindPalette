@@ -6,6 +6,9 @@
 <h3 class = "text-center">Login</h3>
 <form action="{% url "login" %}" method="POST" style="width:500px; margin:auto;">
     {% csrf_token %}
+    {% if next %}
+    <input type="hidden" name="next" value="{{ next }}">
+    {% endif %}
     {{ form | crispy}}
 
     <div class="d-flex justify-content-between align-items-center mb-2">

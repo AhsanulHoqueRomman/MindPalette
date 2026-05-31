@@ -4,6 +4,9 @@ from django.core.paginator import Paginator
 from django.db.models import F
 from .models import Blog , Category, Comment
 from django.db.models import Q
+from .forms import ContactMessageForm
+from django.contrib import messages
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -127,3 +130,41 @@ def search(request):
         'keyword' : keyword,
     }
     return render(request, 'search.html', context)
+
+
+def contact(request):
+    if not request.user.is_authenticated:
+        messages.info(request, "Please Login to Contact Us")
+        login_url = reverse('login')
+        contact_url = reverse('contact')
+        return redirect(f"{login_url}?next={contact_url}")
+
+    if request.method == 'POST':
+        form = ContactMessageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your message has been sent. We'll get back to you soon.")
+            return redirect('contact')
+    else:
+        form = ContactMessageForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'contact.html', context)
+
+
+def contact_entry(request):
+    """Entry point for the Contact link in the navbar.
+
+    If the user is authenticated, redirect to the contact form.
+    Otherwise, add an informational message and redirect to the login
+    page with `next` set to the contact URL.
+    """
+    if request.user.is_authenticated:
+        return redirect('contact')
+
+    messages.info(request, "Please Login to Contact Us")
+    login_url = reverse('login')
+    contact_url = reverse('contact')
+    return redirect(f"{login_url}?next={contact_url}")

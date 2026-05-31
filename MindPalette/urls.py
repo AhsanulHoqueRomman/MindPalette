@@ -29,6 +29,8 @@ urlpatterns = [
     path('post/<slug:slug>/', Blogsview.blogs, name='blogs'),
     path('post/<slug:slug>/like/', Blogsview.like_post, name='blog_like'),
     path('post/<slug:slug>/dislike/', Blogsview.dislike_post, name='blog_dislike'),
+    path('contact/', Blogsview.contact, name='contact'),
+    path('contact/entry/', Blogsview.contact_entry, name='contact_entry'),
     #Search Endpoints
     path('blogs/search/', Blogsview.search, name ='search'),
     path('register/', views.register, name='register'),
