@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404 , redirect
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
+from django.db.models import F
 from .models import Blog , Category, Comment
 from django.db.models import Q
 
@@ -34,6 +35,7 @@ def posts_by_category(request, category_id):
 
 def blogs(request, slug):
     post = get_object_or_404(Blog,slug=slug,status='Published')
+
     if request.method == 'POST':
         comment = Comment()
         comment.user = request.user
@@ -41,6 +43,13 @@ def blogs(request, slug):
         comment.comment = request.POST['comment']
         comment.save()
         return HttpResponseRedirect(request.path_info)
+
+    # Count the view once per session to avoid duplicate increments on refresh.
+    session_key = f'viewed_blog_{post.pk}'
+    if not request.session.get(session_key, False):
+        Blog.objects.filter(pk=post.pk).update(views=F('views') + 1)
+        request.session[session_key] = True
+        post.refresh_from_db()
 
     #Comments:
     comments = Comment.objects.filter(blog = post)
