@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from blogs.models import Category, Blog
+from blogs.models import Category, Blog, Profile
 from about.models import About
-from .forms import RegistrationForm
+from .forms import RegistrationForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.paginator import Paginator
 
@@ -30,10 +31,11 @@ def home(request):
 
 def register(request):
     if request.method =='POST':
-        form = RegistrationForm(request.POST)   
+        form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('register')
+            user = form.save()
+            Profile.objects.get_or_create(user=user)
+            return redirect('login')
         else:
             return(form.errors)
     else:
@@ -42,6 +44,37 @@ def register(request):
         'form' : form,
     }
     return render(request, 'register.html', context)
+
+
+@login_required
+def profile(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    context = {
+        'profile': profile,
+    }
+    return render(request, 'profile.html', context)
+
+
+@login_required
+def edit_profile(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    }
+    return render(request, 'edit_profile.html', context)
+
 
 def login(request):
     if request.method =='POST':

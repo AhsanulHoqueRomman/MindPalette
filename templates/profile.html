@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}"
+                             class="rounded-circle mb-3"
+                             style="width: 140px; height: 140px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-3"
+                             style="width: 140px; height: 140px; font-size: 2rem;">
+                            {{ profile.user.username|slice:":1"|upper }}
+                        </div>
+                    {% endif %}
+
+                    <h2 class="mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h2>
+                    <p class="text-muted mb-2">@{{ profile.user.username }}</p>
+
+                    <p class="mb-3">{{ profile.bio|default:'No bio provided yet.' }}</p>
+
+                    <div class="d-flex justify-content-center gap-2 flex-wrap mb-3">
+                        {% if profile.github %}
+                        <a href="{{ profile.github }}" target="_blank" class="btn btn-outline-dark">GitHub</a>
+                        {% endif %}
+                        {% if profile.linkedin %}
+                        <a href="{{ profile.linkedin }}" target="_blank" class="btn btn-outline-dark">LinkedIn</a>
+                        {% endif %}
+                        {% if profile.website %}
+                        <a href="{{ profile.website }}" target="_blank" class="btn btn-outline-dark">Website</a>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <a class="btn btn-success" href="{% url 'edit_profile' %}">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

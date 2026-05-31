@@ -68,3 +68,114 @@ h1, h2, h3, h4, h5, h6 {
 .blog-footer p:last-child {
   margin-bottom: 0;
 }
+
+/* Avatar profile dropdown */
+.navbar-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.navbar-avatar:hover,
+.navbar-avatar:focus {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.navbar-avatar::after {
+  margin-left: 0.35rem;
+}
+
+.avatar-img {
+  width: 40px !important;
+  height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+
+.dropdown-toggle.navbar-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  display: inline-block !important;
+}
+
+.dropdown-toggle.navbar-avatar::after {
+  display: none !important;
+}
+
+.avatar-dropdown {
+  min-width: 210px;
+  border-radius: 0.75rem;
+  padding: 0.35rem 0;
+}
+
+.avatar-dropdown .dropdown-item {
+  padding: 0.75rem 1.25rem;
+}
+
+.avatar-dropdown .dropdown-item.text-danger:hover,
+.avatar-dropdown .dropdown-item.text-danger:focus {
+  background: rgba(220, 53, 69, 0.08);
+}
+
+/* Force avatar and toggle sizing */
+.dropdown-toggle.navbar-avatar,
+.dropdown-toggle.navbar-avatar img {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.dropdown-toggle.navbar-avatar {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  line-height: 0 !important;
+}
+
+.dropdown-toggle.navbar-avatar::after {
+  display: none !important;
+}
+
+.avatar-img {
+  width: 40px !important;
+  height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+
+/* Global link hover styling */
+a,
+.nav a,
+.dropdown-item {
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+a:hover,
+.nav a:hover,
+.dropdown-item:hover {
+  opacity: 0.8;
+  text-decoration: none;
+}
