@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import F
 from .models import Blog , Category, Comment
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -60,14 +61,55 @@ def blogs(request, slug):
         status='Published'
     ).exclude(pk=post.pk).order_by('-created_at')[:3]
 
+    # Determine whether the current user has liked or disliked this post
+    is_liked = False
+    is_disliked = False
+    if request.user.is_authenticated:
+        is_liked = post.likes.filter(pk=request.user.pk).exists()
+        is_disliked = post.dislikes.filter(pk=request.user.pk).exists()
+
     context = {
         'post': post,
         'comments': comments,
         'comments_count' : comments_count,
         'related_posts': related_posts,
+        'is_liked': is_liked,
+        'is_disliked': is_disliked,
     }
 
     return render(request, 'blogs.html', context)
+
+
+@login_required
+def like_post(request, slug):
+    post = get_object_or_404(Blog, slug=slug, status='Published')
+    user = request.user
+
+    if post.likes.filter(pk=user.pk).exists():
+        post.likes.remove(user)
+    else:
+        # add like and remove dislike if present
+        post.likes.add(user)
+        if post.dislikes.filter(pk=user.pk).exists():
+            post.dislikes.remove(user)
+
+    # Redirect back to the blog detail page
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required
+def dislike_post(request, slug):
+    post = get_object_or_404(Blog, slug=slug, status='Published')
+    user = request.user
+
+    if post.dislikes.filter(pk=user.pk).exists():
+        post.dislikes.remove(user)
+    else:
+        post.dislikes.add(user)
+        if post.likes.filter(pk=user.pk).exists():
+            post.likes.remove(user)
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def search(request):
     keyword = request.GET.get('keyword')

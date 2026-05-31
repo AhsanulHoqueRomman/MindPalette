@@ -27,6 +27,8 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('category/', include('blogs.urls')),
     path('post/<slug:slug>/', Blogsview.blogs, name='blogs'),
+    path('post/<slug:slug>/like/', Blogsview.like_post, name='blog_like'),
+    path('post/<slug:slug>/dislike/', Blogsview.dislike_post, name='blog_dislike'),
     #Search Endpoints
     path('blogs/search/', Blogsview.search, name ='search'),
     path('register/', views.register, name='register'),

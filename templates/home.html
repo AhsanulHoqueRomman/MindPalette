@@ -20,7 +20,8 @@
             <a href="{% url 'blogs' post.slug %}"
                class="text-white text-decoration-none">
 
-                {{ post.title }}
+                    {{ post.title }}
+                    <small class="text-muted">&nbsp; <i class="fa fa-thumbs-up"></i> {{ post.total_likes }} &nbsp; <i class="fa fa-thumbs-down"></i> {{ post.total_dislikes }}</small>
 
             </a>
 

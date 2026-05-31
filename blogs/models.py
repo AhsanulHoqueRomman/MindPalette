@@ -35,10 +35,21 @@ class Blog(models.Model):
     is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    likes = models.ManyToManyField(User, related_name='liked_blogs', blank=True)
 
 
     def __str__(self):
         return self.title
+
+    @property
+    def total_likes(self):
+        return self.likes.count()
+
+    dislikes = models.ManyToManyField(User, related_name='disliked_blogs', blank=True)
+
+    @property
+    def total_dislikes(self):
+        return self.dislikes.count()
     
 
 class Comment(models.Model):

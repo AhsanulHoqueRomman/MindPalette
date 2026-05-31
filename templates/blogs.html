@@ -18,6 +18,41 @@
                 Views: {{ post.views }}
             </p>
 
+            <div class="mb-3 d-flex gap-2 align-items-center">
+                {% if user.is_authenticated %}
+                <form action="{% url 'blog_like' post.slug %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    {% if is_liked %}
+                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-thumbs-up"></i> Unlike</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-sm btn-outline-primary"><i class="fa fa-thumbs-up"></i> Like</button>
+                    {% endif %}
+                </form>
+
+                <form action="{% url 'blog_dislike' post.slug %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    {% if is_disliked %}
+                    <button type="submit" class="btn btn-sm btn-warning"><i class="fa fa-thumbs-down"></i> Undislike</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-thumbs-down"></i> Dislike</button>
+                    {% endif %}
+                </form>
+
+                <div class="ms-3 small text-muted">
+                    <span class="me-2"><i class="fa fa-thumbs-up"></i> {{ post.total_likes }}</span>
+                    <span><i class="fa fa-thumbs-down"></i> {{ post.total_dislikes }}</span>
+                </div>
+
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-sm btn-outline-primary"><i class="fa fa-thumbs-up"></i> Like</a>
+                <a href="{% url 'login' %}" class="btn btn-sm btn-outline-secondary ms-2"><i class="fa fa-thumbs-down"></i> Dislike</a>
+                <div class="ms-3 small text-muted">
+                    <span class="me-2"><i class="fa fa-thumbs-up"></i> {{ post.total_likes }}</span>
+                    <span><i class="fa fa-thumbs-down"></i> {{ post.total_dislikes }}</span>
+                </div>
+                {% endif %}
+            </div>
+
             <a href="{% url 'posts_by_category' post.category.id %}"
                class="badge badge-primary p-2 mb-3">
                 {{ post.category }}
