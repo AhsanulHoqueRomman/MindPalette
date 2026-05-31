@@ -29,4 +29,38 @@
     {% endif %}
   </div>
 
+  {% if posts.paginator.num_pages > 1 %}
+  <nav class="mt-4" aria-label="Category posts pagination">
+    <ul class="pagination justify-content-center">
+      {% if posts.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1">First</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">First</span></li>
+      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+      {% endif %}
+
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+      </li>
+
+      {% if posts.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ posts.paginator.num_pages }}">Last</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">Next</span></li>
+      <li class="page-item disabled"><span class="page-link">Last</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
 {% endblock %}

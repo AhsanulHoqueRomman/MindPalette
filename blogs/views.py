@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404 , redirect
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator
 from .models import Blog , Category, Comment
 from django.db.models import Q
 
@@ -7,7 +8,11 @@ from django.db.models import Q
 
 def posts_by_category(request, category_id):
 
-    posts = Blog.objects.filter(category = category_id, status='Published')
+    posts_qs = Blog.objects.filter(category = category_id, status='Published').order_by('-created_at')
+    page_number = request.GET.get('page')
+    paginator = Paginator(posts_qs, 5)
+    posts = paginator.get_page(page_number)
+
     # Use try/except block when we want to do some custom action if the category does not exist.
     # try:
     #     category = Category.objects.get(pk = category_id )
@@ -50,9 +55,14 @@ def blogs(request, slug):
 
 def search(request):
     keyword = request.GET.get('keyword')
-    blogs = Blog.objects.filter(
+    page_number = request.GET.get('page')
+
+    blogs_qs = Blog.objects.filter(
         Q(title__icontains = keyword) | Q(short_description__icontains = keyword) | Q(blog_body__icontains = keyword), status = 'Published'
         ).order_by('-created_at')
+
+    paginator = Paginator(blogs_qs, 5)
+    blogs = paginator.get_page(page_number)
 
     context = {
         'blogs' : blogs,
