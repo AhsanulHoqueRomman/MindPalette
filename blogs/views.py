@@ -54,10 +54,17 @@ def blogs(request, slug):
     #Comments:
     comments = Comment.objects.filter(blog = post)
     comments_count = comments.count()
+
+    related_posts = Blog.objects.filter(
+        category=post.category,
+        status='Published'
+    ).exclude(pk=post.pk).order_by('-created_at')[:3]
+
     context = {
         'post': post,
         'comments': comments,
-        'comments_count' : comments_count
+        'comments_count' : comments_count,
+        'related_posts': related_posts,
     }
 
     return render(request, 'blogs.html', context)
