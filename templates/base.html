@@ -4,221 +4,150 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>MIND PALETTE</title>
 
-    <!-- Bootstrap 5 CSS -->
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-
-    <!-- Google Font -->
-
-    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900"
-          rel="stylesheet">
-
-    <!-- Custom CSS -->
-
-    <link href="{% static 'css/blog.css' %}"
-          rel="stylesheet">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <link href="{% static 'css/blog.css' %}" rel="stylesheet">
 </head>
 
 <body>
+    <header class="site-navbar sticky-top bg-white">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand site-brand" href="/">
+                    MIND PALETTE
+                </a>
 
-    <div class="container">
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-        <!-- Header -->
-
-        <header class="blog-header py-3 border-bottom">
-
-            <div class="row flex-nowrap justify-content-between align-items-center">
-
-                <!-- Logo -->
-
-                <div class="col-lg-3 col-md-3 col-12 mb-3 mb-md-0">
-
-                    <a class="blog-header-logo text-dark text-decoration-none fs-2 fw-bold"
-                       href="/">
-
-                        MIND PALETTE
-
-                    </a>
-
-                </div>
-
-
-                <!-- Search Box -->
-
-                <div class="col-lg-4 col-md-5 col-12 mb-3 mb-md-0">
-
-                    <form action="{% url 'search' %}"
-                          method="GET">
-
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <form class="site-search mx-lg-auto my-3 my-lg-0" action="{% url 'search' %}" method="GET">
                         <div class="input-group">
-
-                            <input type="text"
-                                   name="keyword"
-                                   class="form-control"
-                                   placeholder="Search articles..."
-                                   required>
-
-                            <button class="btn btn-dark"
-                                    type="submit">
-
+                            <input type="text" name="keyword" class="form-control" placeholder="Search stories"
+                                   aria-label="Search stories" required>
+                            <button class="btn btn-dark" type="submit">
                                 Search
-
                             </button>
-
                         </div>
-
                     </form>
 
-                </div>
-
-
-                <!-- Auth Buttons -->
-
-                <div class="col-lg-4 col-md-4 col-12 d-flex justify-content-md-end justify-content-start align-items-center">
-                    <a class="btn btn-outline-dark me-2"
-                       href="{% url 'contact_entry' %}">
-
-                        Contact Us
-
-                    </a>
-
-                    {% if not user.is_authenticated %}
-                    <a class="btn btn-success me-2"
-                       href="{% url 'login' %}">
-
-                        Login
-
-                    </a>
-
-                    <a class="btn btn-outline-secondary"
-                       href="{% url 'register' %}">
-
-                        Register
-
-                    </a>
-
-                    {% else %}
-                    <div class="dropdown">
-                        <a class="navbar-avatar dropdown-toggle"
-                           href="#"
-                           role="button"
-                           id="profileDropdown"
-                           data-bs-toggle="dropdown"
-                           aria-expanded="false"
-                           style="padding: 0;">
-                            <img src="{% if profile and profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}"
-                                 alt="{{ user.username }}"
-                                 class="avatar-img">
+                    <div class="navbar-actions d-flex align-items-center justify-content-lg-end gap-2">
+                        {% if not user.is_authenticated %}
+                        <a class="btn btn-link nav-auth-link" href="{% url 'login' %}">
+                            Login
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow avatar-dropdown"
-                            aria-labelledby="profileDropdown">
-                            <li>
-                                <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a>
-                            </li>
-                        </ul>
+                        <a class="btn btn-dark nav-register-btn" href="{% url 'register' %}">
+                            Register
+                        </a>
+                        {% else %}
+                        <div class="dropdown">
+                            <a class="navbar-avatar dropdown-toggle" href="#" role="button" id="profileDropdown"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="{% if profile and profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}"
+                                     alt="{{ user.username }}" class="avatar-img">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end avatar-dropdown"
+                                aria-labelledby="profileDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
-
                 </div>
-
             </div>
+        </nav>
+    </header>
 
-        </header>
+    <div class="topic-nav bg-white border-bottom">
+        <div class="container">
+            <nav class="nav flex-nowrap overflow-auto py-2" aria-label="Blog categories">
+                {% for category in categories %}
+                <a class="topic-link" href="{% url 'posts_by_category' category.id %}">
+                    {{ category.category_name }}
+                </a>
+                {% endfor %}
+            </nav>
+        </div>
+    </div>
 
-
-        {% if messages %}
-        <div class="mt-3">
-            {% for message in messages %}
-            <div class="container">
+    <main class="site-main">
+        <div class="container">
+            {% if messages %}
+            <div class="messages-wrap">
+                {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <!-- Categories Navbar -->
-
-        <div class="nav-scroller py-3 mb-4 border-bottom">
-
-            <nav class="nav d-flex justify-content-between flex-wrap">
-
-                {% for category in categories %}
-
-                <a class="p-2 text-muted text-decoration-none"
-                   href="{% url 'posts_by_category' category.id %}">
-
-                    {{ category.category_name }}
-
-                </a>
-
                 {% endfor %}
+            </div>
+            {% endif %}
 
-            </nav>
-
+            {% block content %}
+            {% endblock %}
         </div>
+    </main>
 
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row gy-4 align-items-center">
+                <div class="col-lg-6">
+                    <a class="footer-brand" href="/">MIND PALETTE</a>
+                    <p class="footer-copy mb-0">
+                        Thoughtful stories, tutorials, and ideas for curious developers.
+                    </p>
+                </div>
 
-        <!-- Main Content -->
+                <div class="col-lg-6">
+                    <div class="footer-links justify-content-lg-end ">
+                        <a class="mt-2" href="{% url 'contact_entry' %}">Contact Us</a>
+                        {% for i in social_links %}
+                        <a href="{{ i.link }}" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="{{ i.platform }}">
+                            {% if i.platform|lower == 'github' %}
+                            <i class="fa fa-github" aria-hidden="true"></i>
+                            {% elif i.platform|lower == 'linkedin' %}
+                            <i class="fa fa-linkedin" aria-hidden="true"></i>
+                            {% elif i.platform|lower == 'instagram' %}
+                            <i class="fa fa-instagram" aria-hidden="true"></i>
+                            {% else %}
+                            <i class="fa fa-link" aria-hidden="true"></i>
+                            {% endif %}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
 
-        {% block content %}
-
-        {% endblock %}
-
-
-        <!-- Footer -->
-
-        <footer class="blog-footer border-top mt-5 py-4 text-center text-muted">
-
-            <p class="mb-0">
-
-                Django Blog built by
-
-                <a href="#"
-                   class="text-decoration-none">
-
-                    Ahsanul Hoque Romman
-
-                </a>
-
-            </p>
-
-        </footer>
-
-    </div>
-
-
-    <!-- Bootstrap 5 JS -->
+            <div class="footer-bottom">
+                <span>&copy; 2026 MIND PALETTE. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

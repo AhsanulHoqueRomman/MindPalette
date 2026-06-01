@@ -1,65 +1,79 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
- <h3 class="text-lowercase" style="letter-spacing: 3px; color: green;">Search results for- '{{ keyword }}'</h3>
-  <div class="row mb-2">
-    {% if blogs %}
+<section class="listing-header">
+    <span class="section-kicker">Search Results</span>
+    <h1>Results for "{{ keyword }}"</h1>
+    <p>{{ blogs.paginator.count }} article{{ blogs.paginator.count|pluralize }} found</p>
+</section>
+
+{% if blogs %}
+<section class="listing-grid">
     {% for post in blogs %}
-      <div class="col-md-6">
-        <div class="card border-0" >
-          <div class="card-body">
-            <h3><a href="{% url "blogs" post.slug %}" class="text-dark">{{ post.title }}</a>
-              <small class="text-muted">&nbsp; <i class="fa fa-thumbs-up"></i> {{ post.total_likes }} &nbsp; <i class="fa fa-thumbs-down"></i> {{ post.total_dislikes }}</small>
-            </h3>
-            <small class="mb-1 text-muted">{{ post.created_at | timesince }} ago | {{ post.author }}</small>
-            <p class="card-text">{{ post.short_description | truncatewords:30 }}</p>
-            <div class="my-4">
-                <img src="{{ post.featured_image.url }}"
-                     class="img-fluid rounded w-100"
-                     style="max-height:450px; object-fit:cover;">
+    <article class="listing-card">
+        <a href="{% url 'blogs' post.slug %}" class="listing-image">
+            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+        </a>
+        <div class="listing-card-body">
+            <a href="{% url 'posts_by_category' post.category.id %}" class="content-badge">
+                {{ post.category }}
+            </a>
+            <h2>
+                <a href="{% url 'blogs' post.slug %}">{{ post.title }}</a>
+            </h2>
+            <p>{{ post.short_description|truncatewords:28 }}</p>
+            <div class="article-author-row">
+                <img src="{% if post.author.profile.profile_picture %}{{ post.author.profile.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}"
+                     alt="{{ post.author }}" class="mini-avatar">
+                <div>
+                    <span class="author-name">{{ post.author }}</span>
+                    <span class="post-meta-row">
+                        <span>{{ post.created_at|date:"M d, Y" }}</span>
+                        <span>{% widthratio post.blog_body|wordcount 180 1 %} min read</span>
+                    </span>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </article>
     {% endfor %}
-    {% else %}
-    <p>No Posts Found in this category</p>
-    {% endif %}
-  </div>
+</section>
+{% else %}
+<section class="no-results-card">
+    <span class="section-kicker">No Results Found</span>
+    <h2>Nothing matched "{{ keyword }}"</h2>
+    <p>Try a different keyword, check spelling, or browse the latest articles from the homepage.</p>
+    <a href="{% url 'home' %}" class="btn btn-dark rounded-pill px-4">Back to Home</a>
+</section>
+{% endif %}
 
-  {% if blogs.paginator.num_pages > 1 %}
-  <nav class="mt-4" aria-label="Search results pagination">
-    <ul class="pagination justify-content-center">
-      {% if blogs.has_previous %}
-      <li class="page-item">
-        <a class="page-link" href="?keyword={{ keyword|urlencode }}&page=1">First</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?keyword={{ keyword|urlencode }}&page={{ blogs.previous_page_number }}">Previous</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled"><span class="page-link">First</span></li>
-      <li class="page-item disabled"><span class="page-link">Previous</span></li>
-      {% endif %}
+{% if blogs.paginator.num_pages > 1 %}
+<nav class="mt-4" aria-label="Search results pagination">
+    <ul class="pagination modern-pagination justify-content-center">
+        {% if blogs.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?keyword={{ keyword|urlencode }}&page=1">First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?keyword={{ keyword|urlencode }}&page={{ blogs.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
 
-      <li class="page-item active" aria-current="page">
-        <span class="page-link">Page {{ blogs.number }} of {{ blogs.paginator.num_pages }}</span>
-      </li>
+        <li class="page-item active" aria-current="page">
+            <span class="page-link">Page {{ blogs.number }} of {{ blogs.paginator.num_pages }}</span>
+        </li>
 
-      {% if blogs.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?keyword={{ keyword|urlencode }}&page={{ blogs.next_page_number }}">Next</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?keyword={{ keyword|urlencode }}&page={{ blogs.paginator.num_pages }}">Last</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled"><span class="page-link">Next</span></li>
-      <li class="page-item disabled"><span class="page-link">Last</span></li>
-      {% endif %}
+        {% if blogs.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?keyword={{ keyword|urlencode }}&page={{ blogs.next_page_number }}">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?keyword={{ keyword|urlencode }}&page={{ blogs.paginator.num_pages }}">Last</a>
+        </li>
+        {% endif %}
     </ul>
-  </nav>
-  {% endif %}
+</nav>
+{% endif %}
 
 {% endblock %}

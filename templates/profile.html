@@ -1,48 +1,118 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-{% load crispy_forms_tags %}
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    {% if profile.profile_picture %}
-                        <img src="{{ profile.profile_picture.url }}"
-                             class="rounded-circle mb-3"
-                             style="width: 140px; height: 140px; object-fit: cover;">
-                    {% else %}
-                        <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-3"
-                             style="width: 140px; height: 140px; font-size: 2rem;">
-                            {{ profile.user.username|slice:":1"|upper }}
-                        </div>
-                    {% endif %}
+<section class="profile-page">
+    <div class="profile-cover-card">
+        <div class="profile-cover"></div>
 
-                    <h2 class="mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h2>
-                    <p class="text-muted mb-2">@{{ profile.user.username }}</p>
-
-                    <p class="mb-3">{{ profile.bio|default:'No bio provided yet.' }}</p>
-
-                    <div class="d-flex justify-content-center gap-2 flex-wrap mb-3">
-                        {% if profile.github %}
-                        <a href="{{ profile.github }}" target="_blank" class="btn btn-outline-dark">GitHub</a>
-                        {% endif %}
-                        {% if profile.linkedin %}
-                        <a href="{{ profile.linkedin }}" target="_blank" class="btn btn-outline-dark">LinkedIn</a>
-                        {% endif %}
-                        {% if profile.website %}
-                        <a href="{{ profile.website }}" target="_blank" class="btn btn-outline-dark">Website</a>
-                        {% endif %}
-                    </div>
-
-                    <div>
-                        <a class="btn btn-success" href="{% url 'edit_profile' %}">Edit Profile</a>
-                    </div>
+        <div class="profile-header-content">
+            <div class="profile-avatar-wrap">
+                {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}" class="profile-avatar-lg">
+                {% else %}
+                <div class="profile-avatar-fallback">
+                    {{ profile.user.username|slice:":1"|upper }}
                 </div>
+                {% endif %}
+            </div>
+
+            <div class="profile-headline">
+                <div>
+                    <h1>{{ profile.user.get_full_name|default:profile.user.username }}</h1>
+                    <p class="profile-username">@{{ profile.user.username }}</p>
+                </div>
+
+                <div class="profile-actions">
+                    <a href="{% url 'edit_profile' %}" class="btn btn-dark rounded-pill px-4">Edit Profile</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-dark rounded-pill px-4">Dashboard</a>
+                </div>
+            </div>
+
+            <p class="profile-bio">
+                {{ profile.bio|default:'No bio provided yet. Add a short introduction to make your developer profile feel complete.' }}
+            </p>
+
+            <div class="profile-socials">
+                {% if profile.github %}
+                <a href="{{ profile.github }}" target="_blank">GitHub</a>
+                {% endif %}
+                {% if profile.linkedin %}
+                <a href="{{ profile.linkedin }}" target="_blank">LinkedIn</a>
+                {% endif %}
+                {% if profile.website %}
+                <a href="{{ profile.website }}" target="_blank">Website</a>
+                {% endif %}
+                {% if not profile.github and not profile.linkedin and not profile.website %}
+                <span>No social links added yet.</span>
+                {% endif %}
             </div>
         </div>
     </div>
-</div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-md-4">
+            <div class="profile-stat-card">
+                <span>Total Posts</span>
+                <strong>{{ profile.user.blog_set.count }}</strong>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="profile-stat-card">
+                <span>Total Comments</span>
+                <strong>{{ profile.user.comment_set.count }}</strong>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="profile-stat-card">
+                <span>Total Views</span>
+                <strong>-</strong>
+                <small>Needs backend aggregate</small>
+            </div>
+        </div>
+    </div>
+
+    <section class="section-block mt-5">
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">Portfolio</span>
+                <h2>Recent Posts</h2>
+            </div>
+            <a href="{% url 'posts' %}" class="btn btn-outline-dark rounded-pill px-4">Manage Posts</a>
+        </div>
+
+        <div class="row g-4">
+            {% for post in profile.user.blog_set.all|slice:":3" %}
+            <div class="col-md-6 col-xl-4">
+                <article class="feature-card h-100">
+                    {% if post.featured_image %}
+                    <a href="{% url 'blogs' post.slug %}" class="card-image-wrap">
+                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="card-img">
+                    </a>
+                    {% endif %}
+                    <div class="feature-card-body">
+                        <a href="{% url 'posts_by_category' post.category.id %}" class="content-badge">
+                            {{ post.category }}
+                        </a>
+                        <h3>
+                            <a href="{% url 'blogs' post.slug %}">{{ post.title }}</a>
+                        </h3>
+                        <p>{{ post.short_description|truncatewords:18 }}</p>
+                        <div class="post-meta-row">
+                            <span>{{ post.created_at|date:"M d, Y" }}</span>
+                            <span>{{ post.views }} views</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">No posts yet. Create your first article from the dashboard.</div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</section>
 
 {% endblock %}

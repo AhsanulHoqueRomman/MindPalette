@@ -1,68 +1,78 @@
 {% extends "base.html" %}
-    
+{% load static %}
+
 {% block content %}
 
+<section class="topic-banner">
+    <span class="section-kicker">Topic</span>
+    <h1>{{ category }}</h1>
+    <p>{{ posts.paginator.count }} post{{ posts.paginator.count|pluralize }} published in this category</p>
+</section>
 
-<!-- Featured Post -->
-  
-  <h3 class="text-uppercase" style="letter-spacing: 3px; color: green;">Category-{{ category }}</h3>
-  <div class="row mb-2">
-    {% if posts %}
+{% if posts %}
+<section class="row g-4">
     {% for post in posts %}
-      <div class="col-md-6">
-        <div class="card border-0" >
-          <div class="card-body">
-            <h3><a href="{% url "blogs" post.slug %}" class="text-dark">{{ post.title }}</a>
-              <small class="text-muted">&nbsp; <i class="fa fa-thumbs-up"></i> {{ post.total_likes }} &nbsp; <i class="fa fa-thumbs-down"></i> {{ post.total_dislikes }}</small>
-            </h3>
-            <small class="mb-1 text-muted">{{ post.created_at | timesince }} ago | {{ post.author }}</small>
-            <p class="card-text">{{ post.short_description }}</p>
-            <div class="my-4">
-                <img src="{{ post.featured_image.url }}"
-                     class="img-fluid rounded w-100"
-                     style="max-height:450px; object-fit:cover;">
+    <div class="col-md-6 col-xl-4">
+        <article class="feature-card h-100">
+            <a href="{% url 'blogs' post.slug %}" class="card-image-wrap">
+                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="card-img">
+            </a>
+            <div class="feature-card-body">
+                <a href="{% url 'posts_by_category' post.category.id %}" class="content-badge">
+                    {{ post.category }}
+                </a>
+                <h3>
+                    <a href="{% url 'blogs' post.slug %}">{{ post.title }}</a>
+                </h3>
+                <p>{{ post.short_description|truncatewords:22 }}</p>
+                <div class="post-meta-row">
+                    <span>{{ post.author }}</span>
+                    <span>{{ post.created_at|date:"M d, Y" }}</span>
+                    <span>{% widthratio post.blog_body|wordcount 180 1 %} min read</span>
+                </div>
+                <a href="{% url 'blogs' post.slug %}" class="btn btn-outline-dark rounded-pill px-4 mt-auto">
+                    Read More
+                </a>
             </div>
-          </div>
-        </div>
-      </div>
+        </article>
+    </div>
     {% endfor %}
-    {% else %}
-    <p>No Posts Found in this category</p>
-    {% endif %}
-  </div>
+</section>
+{% else %}
+<section class="no-results-card">
+    <span class="section-kicker">No Posts Yet</span>
+    <h2>{{ category }} is waiting for its first story</h2>
+    <p>Check back later or explore another topic from the navigation above.</p>
+    <a href="{% url 'home' %}" class="btn btn-dark rounded-pill px-4">Back to Home</a>
+</section>
+{% endif %}
 
-  {% if posts.paginator.num_pages > 1 %}
-  <nav class="mt-4" aria-label="Category posts pagination">
-    <ul class="pagination justify-content-center">
-      {% if posts.has_previous %}
-      <li class="page-item">
-        <a class="page-link" href="?page=1">First</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled"><span class="page-link">First</span></li>
-      <li class="page-item disabled"><span class="page-link">Previous</span></li>
-      {% endif %}
+{% if posts.paginator.num_pages > 1 %}
+<nav class="mt-4" aria-label="Category posts pagination">
+    <ul class="pagination modern-pagination justify-content-center">
+        {% if posts.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
 
-      <li class="page-item active" aria-current="page">
-        <span class="page-link">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
-      </li>
+        <li class="page-item active" aria-current="page">
+            <span class="page-link">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+        </li>
 
-      {% if posts.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ posts.paginator.num_pages }}">Last</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled"><span class="page-link">Next</span></li>
-      <li class="page-item disabled"><span class="page-link">Last</span></li>
-      {% endif %}
+        {% if posts.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts.paginator.num_pages }}">Last</a>
+        </li>
+        {% endif %}
     </ul>
-  </nav>
-  {% endif %}
+</nav>
+{% endif %}
 
 {% endblock %}
