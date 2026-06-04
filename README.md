@@ -138,15 +138,6 @@ Visit:
 http://127.0.0.1:8000/
 ```
 
-## 📸 Screenshots
-
-Add screenshots here:
-
-* Home Page
-* Blog Detail Page
-* User Profile
-* Admin Dashboard
-
 ## 🔮 Future Improvements
 
 * Newsletter Subscription
